@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import FirebaseCore
 
 struct MealDetailView: View {
     let mealId: String
@@ -12,6 +13,7 @@ struct MealDetailView: View {
 
     @State private var detail: MealDetail?
     @State private var isLoading = true
+    @EnvironmentObject private var favorites: FavoritesStore
 
     var body: some View {
         ScrollView {
@@ -40,10 +42,35 @@ struct MealDetailView: View {
             .padding()
         }
         .navigationTitle(title)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(action: { Task { await toggleFavorite() } }) {
+                    HStack {
+                        Image(systemName: favorites.isSaved(mealId: mealId) ? "heart.fill" : "heart")
+                        Text(favorites.isSaved(mealId: mealId) ? "Saved" : "Save")
+                    }
+                }
+                .buttonStyle(.borderedProminent)
+            }
+        }
         .task {
             do { detail = try await MealAPI.lookup(id: mealId) }
             catch { print("Lookup error:", error) }
             isLoading = false
+        }
+    }
+}
+
+extension MealDetailView {
+    private func toggleFavorite() async {
+        do {
+            if favorites.isSaved(mealId: mealId) {
+                try await favorites.remove(mealId: mealId)
+            } else {
+                try await favorites.save(mealId: mealId, title: title, thumb: thumb)
+            }
+        } catch {
+            print("Favorite toggle error:", error)
         }
     }
 }
