@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyDpSehchDpfdO-kb0_IdnjQdQw4LSRZtpA</string>
+	<key>GCM_SENDER_ID</key>
+	<string>55926868845</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.mobileapps.MealPlanner</string>
+	<key>PROJECT_ID</key>
+	<string>mealplanner-fc080</string>
+	<key>STORAGE_BUCKET</key>
+	<string>mealplanner-fc080.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:55926868845:ios:1f5aede13973bbcc0b6864</string>
+</dict>
+</plist>
