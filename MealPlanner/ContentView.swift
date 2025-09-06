@@ -9,6 +9,7 @@ struct ContentView: View {
     @StateObject var vm = MealViewModel()
     @EnvironmentObject private var favorites: FavoritesStore
 
+    
     var body: some View {
         TabView {
             NavigationStack {
