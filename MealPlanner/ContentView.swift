@@ -8,6 +8,7 @@ import SwiftUI
 struct ContentView: View {
     @StateObject var vm = MealViewModel()
     @EnvironmentObject private var favorites: FavoritesStore
+    @EnvironmentObject private var authManager: AuthManager
 
     
     var body: some View {
@@ -32,6 +33,14 @@ struct ContentView: View {
                     }
                 }
                 .navigationTitle("Meal Planner")
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button("Sign Out") {
+                            authManager.signOut()
+                        }
+                        .foregroundColor(.red)
+                    }
+                }
             }
             .tabItem { Label("Search", systemImage: "magnifyingglass") }
 

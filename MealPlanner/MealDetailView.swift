@@ -4,7 +4,6 @@
 //
 
 import SwiftUI
-import FirebaseCore
 
 struct MealDetailView: View {
     let mealId: String
@@ -65,12 +64,17 @@ extension MealDetailView {
     private func toggleFavorite() async {
         do {
             if favorites.isSaved(mealId: mealId) {
+                print("Removing favorite: \(mealId)")
                 try await favorites.remove(mealId: mealId)
+                print("Successfully removed favorite")
             } else {
+                print("Saving favorite: \(mealId) - \(title)")
                 try await favorites.save(mealId: mealId, title: title, thumb: thumb)
+                print("Successfully saved favorite")
             }
         } catch {
             print("Favorite toggle error:", error)
+            // You could add user-facing error alerts here
         }
     }
 }

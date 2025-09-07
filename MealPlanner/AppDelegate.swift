@@ -11,15 +11,9 @@ import FirebaseAuth
 final class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-        if FirebaseApp.app() == nil {
-            FirebaseApp.configure()
-        }
-
-        Auth.auth().signInAnonymously { _, error in
-            if let error = error {
-                print("Anonymous auth error: \(error)")
-            }
-        }
+        // Configure Firebase first
+        FirebaseApp.configure()
+        print("Firebase configured successfully")
         return true
     }
 }

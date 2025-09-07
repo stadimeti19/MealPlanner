@@ -77,14 +77,38 @@ final class FavoritesStore: ObservableObject {
     }
 
     func save(mealId: String, title: String, thumb: String) async throws {
-        guard let col = userFavoritesCollection() else { return }
+        // If not authenticated, use local storage
+        if Auth.auth().currentUser == nil {
+            print("FavoritesStore: User not authenticated, using local storage")
+            let favorite = Favorite(id: mealId, title: title, thumb: thumb)
+            if !favorites.contains(where: { $0.id == mealId }) {
+                favorites.append(favorite)
+                print("FavoritesStore: Saved to local storage: \(title)")
+            }
+            return
+        }
+        
+        guard let col = userFavoritesCollection() else { 
+            print("FavoritesStore: No user collection available")
+            return 
+        }
+        print("FavoritesStore: Saving to collection: \(col.path)")
         try await col.document(mealId).setData([
             "title": title,
             "thumb": thumb
         ], merge: true)
+        print("FavoritesStore: Successfully saved to Firestore")
     }
 
     func remove(mealId: String) async throws {
+        // If not authenticated, remove from local storage
+        if Auth.auth().currentUser == nil {
+            print("FavoritesStore: User not authenticated, removing from local storage")
+            favorites.removeAll { $0.id == mealId }
+            print("FavoritesStore: Removed from local storage: \(mealId)")
+            return
+        }
+        
         guard let col = userFavoritesCollection() else { return }
         try await col.document(mealId).delete()
     }
