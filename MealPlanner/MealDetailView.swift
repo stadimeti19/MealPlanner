@@ -56,6 +56,9 @@ struct MealDetailView: View {
                 }
             }
             .padding()
+            .background(Color(UIColor.systemBackground)) // Modern background color
+            .cornerRadius(12) // Rounded corners for modern design
+            .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: 5) // Subtle shadow
         }
         .navigationTitle(title)
         .toolbar {
