@@ -16,28 +16,29 @@ struct MealDetailView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
+            VStack(alignment: .leading, spacing: 20) {
                 if let d = detail {
                     if let url = URL(string: d.strMealThumb ?? "") {
                         AsyncImage(url: url) { image in
                             image.resizable().scaledToFit()
                         } placeholder: { ProgressView() }
-                        .clipShape(RoundedRectangle(cornerRadius: 16))
-                        .shadow(radius: 4)
+                        .clipShape(RoundedRectangle(cornerRadius: 20))
+                        .shadow(color: Color.black.opacity(0.2), radius: 6, x: 0, y: 2)
                     }
 
                     Text("Instructions")
                         .font(.title2)
                         .fontWeight(.bold)
-                        .padding(.top, 12)
+                        .padding(.top, 16)
                     Text(d.strInstructions ?? "—")
                         .font(.body)
                         .foregroundColor(.secondary)
+                        .padding(.bottom, 16)
 
                     Text("Ingredients")
                         .font(.title2)
                         .fontWeight(.bold)
-                        .padding(.top, 12)
+                        .padding(.top, 16)
                     ForEach(d.ingredientsList(), id: \.self) { item in
                         Text("• \(item)")
                             .font(.body)
@@ -45,10 +46,12 @@ struct MealDetailView: View {
                     }
                 } else if isLoading {
                     ProgressView()
+                        .padding(.top, 20)
                 } else {
                     Text("No details found.")
                         .font(.body)
                         .foregroundColor(.red)
+                        .padding(.top, 20)
                 }
             }
             .padding()
@@ -64,6 +67,7 @@ struct MealDetailView: View {
                     }
                 }
                 .buttonStyle(.borderedProminent)
+                .tint(.red)
             }
         }
         .task {
