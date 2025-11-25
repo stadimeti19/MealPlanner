@@ -23,7 +23,7 @@ struct MealDetailView: View {
                             image.resizable().scaledToFit()
                         } placeholder: { ProgressView() }
                         .clipShape(RoundedRectangle(cornerRadius: 20))
-                        .shadow(color: Color.black.opacity(0.2), radius: 6, x: 0, y: 2)
+                        .shadow(color: Color.black.opacity(0.2), radius: 8, x: 0, y: 4)
                     }
 
                     Text("Instructions")
@@ -43,6 +43,7 @@ struct MealDetailView: View {
                         Text("• \(item)")
                             .font(.body)
                             .foregroundColor(.primary)
+                            .padding(.bottom, 2)
                     }
                 } else if isLoading {
                     ProgressView()
