@@ -11,6 +11,7 @@ class MealViewModel: ObservableObject {
         if let index = meals.firstIndex(where: { $0.name == meal.name }) {
             meals[index].rating = rating
             calculateAverageRating()
+            userRating = rating // Store the user's rating
         }
     }
 
