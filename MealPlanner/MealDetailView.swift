@@ -34,16 +34,9 @@ struct MealDetailView: View {
                             .padding(.top, 8)
 
                         Text("Ingredients").font(.headline).padding(.top, 8)
-                        ForEach(ingredients, id: \.self) { item in
-                            TextField("Ingredient", text: Binding(
-                                get: { item },
-                                set: { newValue in
-                                    if let index = ingredients.firstIndex(of: item) {
-                                        ingredients[index] = newValue
-                                    }
-                                }
-                            ))
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                        ForEach(ingredients.indices, id: \.self) { index in
+                            TextField("Ingredient", text: $ingredients[index])
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
                         }
                         Button(action: addIngredient) {
                             Text("Add Ingredient")
@@ -93,7 +86,6 @@ struct MealDetailView: View {
             }
             isLoading = false
         }
-    }
     
     private func addIngredient() {
         ingredients.append("")
