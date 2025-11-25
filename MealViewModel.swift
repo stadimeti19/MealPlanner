@@ -8,8 +8,10 @@ class MealViewModel: ObservableObject {
 
     func submitRating(for meal: Meal, rating: Int) {
         // Update meal rating logic
-        meal.rating = rating
-        calculateAverageRating()
+        if let index = meals.firstIndex(where: { $0.name == meal.name }) {
+            meals[index].rating = rating
+            calculateAverageRating()
+        }
     }
 
     private func calculateAverageRating() {
