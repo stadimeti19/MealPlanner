@@ -16,40 +16,62 @@ struct MealDetailView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 12) {
+            VStack(alignment: .leading, spacing: 20) {
                 if let d = detail {
                     if let url = URL(string: d.strMealThumb ?? "") {
                         AsyncImage(url: url) { image in
                             image.resizable().scaledToFit()
                         } placeholder: { ProgressView() }
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .clipShape(RoundedRectangle(cornerRadius: 20))
+                        .shadow(color: Color.black.opacity(0.2), radius: 8, x: 0, y: 4)
                     }
 
-                    Text("Instructions").font(.headline)
+                    Text("Instructions")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .padding(.top, 16)
                     Text(d.strInstructions ?? "—")
+                        .font(.body)
+                        .foregroundColor(.secondary)
+                        .padding(.bottom, 16)
 
-                    Text("Ingredients").font(.headline).padding(.top, 8)
+                    Text("Ingredients")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .padding(.top, 16)
                     ForEach(d.ingredientsList(), id: \.self) { item in
                         Text("• \(item)")
+                            .font(.body)
+                            .foregroundColor(.primary)
+                            .padding(.bottom, 2)
                     }
                 } else if isLoading {
                     ProgressView()
+                        .padding(.top, 20)
                 } else {
                     Text("No details found.")
+                        .font(.body)
+                        .foregroundColor(.red)
+                        .padding(.top, 20)
                 }
             }
             .padding()
+            .background(Color(UIColor.systemBackground)) // Modern background color
+            .cornerRadius(12) // Rounded corners for modern design
+            .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: 5) // Subtle shadow
         }
         .navigationTitle(title)
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: { Task { await toggleFavorite() } }) {
                     HStack {
                         Image(systemName: favorites.isSaved(mealId: mealId) ? "heart.fill" : "heart")
                         Text(favorites.isSaved(mealId: mealId) ? "Saved" : "Save")
+                            .fontWeight(.semibold)
                     }
                 }
                 .buttonStyle(.borderedProminent)
+                .tint(.red)
             }
         }
         .task {
@@ -78,4 +100,3 @@ extension MealDetailView {
         }
     }
 }
-
