@@ -25,6 +25,10 @@ struct MealDetailView: View {
                 }
             }
             .padding()
+            
+            Text("Your Rating: \(rating)")
+                .font(.subheadline)
+                .padding(.top)
         }
         .onAppear {
             fetchAverageRating()
