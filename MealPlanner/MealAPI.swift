@@ -74,4 +74,39 @@ enum MealAPI {
         let (data, _) = try await URLSession.shared.data(from: url)
         return try JSONDecoder().decode(MealDetailResponse.self, from: data).meals?.first
     }
+
+    // New API endpoint to create a meal plan
+    static func createMealPlan(userId: String, mealIds: [String], instructions: String) async throws -> Bool {
+        let url = URL(string: "https://api.yourservice.com/mealplans")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let body: [String: Any] = [
+            "userId": userId,
+            "mealIds": mealIds,
+            "instructions": instructions
+        ]
+        request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 201 else {
+            return false
+        }
+        return true
+    }
+
+    // New API endpoint to fetch meal plans for a user
+    static func fetchMealPlans(forUser userId: String) async throws -> [MealPlan] {
+        let url = URL(string: "https://api.yourservice.com/mealplans?userId=\(userId)")!
+        let (data, _) = try await URLSession.shared.data(from: url)
+        return try JSONDecoder().decode([MealPlan].self, from: data)
+    }
+}
+
+struct MealPlan: Decodable, Identifiable {
+    let id: String
+    let userId: String
+    let mealIds: [String]
+    let instructions: String
 }
