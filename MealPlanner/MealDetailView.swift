@@ -16,37 +16,51 @@ struct MealDetailView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 12) {
+            VStack(alignment: .leading, spacing: 16) {
                 if let d = detail {
                     if let url = URL(string: d.strMealThumb ?? "") {
                         AsyncImage(url: url) { image in
                             image.resizable().scaledToFit()
                         } placeholder: { ProgressView() }
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .clipShape(RoundedRectangle(cornerRadius: 16))
+                        .shadow(radius: 4)
                     }
 
-                    Text("Instructions").font(.headline)
+                    Text("Instructions")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .padding(.top, 12)
                     Text(d.strInstructions ?? "—")
+                        .font(.body)
+                        .foregroundColor(.secondary)
 
-                    Text("Ingredients").font(.headline).padding(.top, 8)
+                    Text("Ingredients")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .padding(.top, 12)
                     ForEach(d.ingredientsList(), id: \.self) { item in
                         Text("• \(item)")
+                            .font(.body)
+                            .foregroundColor(.primary)
                     }
                 } else if isLoading {
                     ProgressView()
                 } else {
                     Text("No details found.")
+                        .font(.body)
+                        .foregroundColor(.red)
                 }
             }
             .padding()
         }
         .navigationTitle(title)
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: { Task { await toggleFavorite() } }) {
                     HStack {
                         Image(systemName: favorites.isSaved(mealId: mealId) ? "heart.fill" : "heart")
                         Text(favorites.isSaved(mealId: mealId) ? "Saved" : "Save")
+                            .fontWeight(.semibold)
                     }
                 }
                 .buttonStyle(.borderedProminent)
@@ -78,4 +92,3 @@ extension MealDetailView {
         }
     }
 }
-
