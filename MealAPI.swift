@@ -46,4 +46,25 @@ class MealAPI {
         
         sqlite3_finalize(statement)
     }
+    
+    // New API endpoint for retrieving average meal rating
+    func getAverageMealRating(mealId: Int, completion: @escaping (Double?, Error?) -> Void) {
+        let query = "SELECT AVG(rating) FROM meal_ratings WHERE meal_id = ?"
+        var statement: OpaquePointer?
+        
+        if sqlite3_prepare_v2(database, query, -1, &statement, nil) == SQLITE_OK {
+            sqlite3_bind_int(statement, 1, Int32(mealId))
+            
+            if sqlite3_step(statement) == SQLITE_ROW {
+                let averageRating = sqlite3_column_double(statement, 0)
+                completion(averageRating, nil)
+            } else {
+                completion(nil, NSError(domain: "MealAPI", code: 4, userInfo: [NSLocalizedDescriptionKey: "Failed to retrieve average rating"]))
+            }
+        } else {
+            completion(nil, NSError(domain: "MealAPI", code: 5, userInfo: [NSLocalizedDescriptionKey: "Failed to prepare statement"]))
+        }
+        
+        sqlite3_finalize(statement)
+    }
 }
