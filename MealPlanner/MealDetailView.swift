@@ -12,6 +12,9 @@ struct MealDetailView: View {
 
     @State private var detail: MealDetail?
     @State private var isLoading = true
+    @State private var isEditing = false
+    @State private var ingredients: [String] = []
+    @State private var instructions: String = ""
     @EnvironmentObject private var favorites: FavoritesStore
 
     var body: some View {
@@ -25,12 +28,35 @@ struct MealDetailView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
 
-                    Text("Instructions").font(.headline)
-                    Text(d.strInstructions ?? "—")
+                    if isEditing {
+                        TextField("Instructions", text: $instructions)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .padding(.top, 8)
 
-                    Text("Ingredients").font(.headline).padding(.top, 8)
-                    ForEach(d.ingredientsList(), id: \.self) { item in
-                        Text("• \(item)")
+                        Text("Ingredients").font(.headline).padding(.top, 8)
+                        ForEach(ingredients, id: \.self) { item in
+                            TextField("Ingredient", text: Binding(
+                                get: { item },
+                                set: { newValue in
+                                    if let index = ingredients.firstIndex(of: item) {
+                                        ingredients[index] = newValue
+                                    }
+                                }
+                            ))
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                        }
+                        Button(action: addIngredient) {
+                            Text("Add Ingredient")
+                        }
+                        .padding(.top, 8)
+                    } else {
+                        Text("Instructions").font(.headline)
+                        Text(d.strInstructions ?? "—")
+
+                        Text("Ingredients").font(.headline).padding(.top, 8)
+                        ForEach(d.ingredientsList(), id: \.self) { item in
+                            Text("• \(item)")
+                        }
                     }
                 } else if isLoading {
                     ProgressView()
@@ -51,12 +77,26 @@ struct MealDetailView: View {
                 }
                 .buttonStyle(.borderedProminent)
             }
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: { isEditing.toggle() }) {
+                    Text(isEditing ? "Done" : "Edit")
+                }
+            }
         }
         .task {
-            do { detail = try await MealAPI.lookup(id: mealId) }
-            catch { print("Lookup error:", error) }
+            do {
+                detail = try await MealAPI.lookup(id: mealId)
+                ingredients = d.ingredientsList()
+                instructions = d.strInstructions ?? ""
+            } catch {
+                print("Lookup error:", error)
+            }
             isLoading = false
         }
+    }
+    
+    private func addIngredient() {
+        ingredients.append("")
     }
 }
 
@@ -78,4 +118,3 @@ extension MealDetailView {
         }
     }
 }
-
