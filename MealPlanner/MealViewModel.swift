@@ -30,14 +30,18 @@ final class MealViewModel: ObservableObject {
     
     func saveMealPlans() {
         // Code to save mealPlans to persistent storage
+        // Example: UserDefaults.standard.set(try? PropertyListEncoder().encode(mealPlans), forKey: "mealPlans")
     }
     
     func retrieveMealPlans() {
         // Code to retrieve mealPlans from persistent storage
+        // Example: if let data = UserDefaults.standard.value(forKey: "mealPlans") as? Data {
+        //              mealPlans = (try? PropertyListDecoder().decode([MealPlan].self, from: data)) ?? []
+        //          }
     }
 }
 
-struct MealPlan {
+struct MealPlan: Codable {
     let name: String
     let meals: [MealBrief]
 }
