@@ -5,6 +5,7 @@
 
 import SwiftUI
 import FirebaseAuth
+import FirebaseFirestore
 
 struct AuthView: View {
     @State private var email = ""
@@ -13,6 +14,9 @@ struct AuthView: View {
     @State private var isLoading = false
     @State private var errorMessage = ""
     @State private var showAlert = false
+    @State private var mealPlan = ""
+    @State private var savedMealPlans: [String] = []
+    @State private var performanceMetrics: [String: Any] = [:]
     
     var body: some View {
         NavigationView {
@@ -81,6 +85,43 @@ struct AuthView: View {
                 .padding(.horizontal, 32)
                 
                 Spacer()
+                
+                // Meal Plan Input
+                VStack(spacing: 16) {
+                    Text("Create Your Meal Plan")
+                        .font(.title2)
+                        .fontWeight(.semibold)
+                    
+                    TextField("Enter Meal Plan", text: $mealPlan)
+                        .textFieldStyle(.roundedBorder)
+                        .padding(.horizontal, 32)
+                    
+                    Button(action: {
+                        saveMealPlan()
+                    }) {
+                        Text("Save Meal Plan")
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.green)
+                            .foregroundColor(.white)
+                            .cornerRadius(8)
+                    }
+                    .disabled(mealPlan.isEmpty)
+                }
+                .padding(.bottom, 40)
+                
+                // Display Saved Meal Plans
+                VStack(spacing: 16) {
+                    Text("Saved Meal Plans")
+                        .font(.title2)
+                        .fontWeight(.semibold)
+                    
+                    List(savedMealPlans, id: \.self) { plan in
+                        Text(plan)
+                    }
+                    .frame(height: 200)
+                }
+                .padding(.horizontal, 32)
             }
             .navigationBarHidden(true)
         }
@@ -89,6 +130,10 @@ struct AuthView: View {
         } message: {
             Text(errorMessage)
         }
+        .onAppear {
+            fetchMealPlans()
+            startPerformanceTesting()
+        }
     }
     
     private func performAuth() async {
@@ -96,6 +141,7 @@ struct AuthView: View {
         errorMessage = ""
         
         do {
+            let startTime = Date()
             if isSignUp {
                 try await Auth.auth().createUser(withEmail: email, password: password)
                 print("Successfully created user account")
@@ -103,6 +149,8 @@ struct AuthView: View {
                 try await Auth.auth().signIn(withEmail: email, password: password)
                 print("Successfully signed in user")
             }
+            let endTime = Date()
+            performanceMetrics["authDuration"] = endTime.timeIntervalSince(startTime)
         } catch {
             errorMessage = error.localizedDescription
             showAlert = true
@@ -110,6 +158,51 @@ struct AuthView: View {
         }
         
         isLoading = false
+    }
+    
+    private func saveMealPlan() {
+        guard let user = Auth.auth().currentUser else {
+            print("No user is signed in.")
+            return
+        }
+        
+        let db = Firestore.firestore()
+        let mealPlanData: [String: Any] = [
+            "mealPlan": mealPlan,
+            "userId": user.uid,
+            "timestamp": Timestamp(date: Date())
+        ]
+        
+        db.collection("mealPlans").addDocument(data: mealPlanData) { error in
+            if let error = error {
+                print("Error saving meal plan: \(error)")
+            } else {
+                print("Meal Plan Saved: \(mealPlan)")
+                mealPlan = ""
+                fetchMealPlans()
+            }
+        }
+    }
+    
+    private func fetchMealPlans() {
+        guard let user = Auth.auth().currentUser else {
+            print("No user is signed in.")
+            return
+        }
+        
+        let db = Firestore.firestore()
+        db.collection("mealPlans").whereField("userId", isEqualTo: user.uid).getDocuments { (querySnapshot, error) in
+            if let error = error {
+                print("Error fetching meal plans: \(error)")
+            } else {
+                savedMealPlans = querySnapshot?.documents.compactMap { $0.data()["mealPlan"] as? String } ?? []
+            }
+        }
+    }
+    
+    private func startPerformanceTesting() {
+        // Placeholder for performance testing logic
+        print("Performance testing started.")
     }
 }
 

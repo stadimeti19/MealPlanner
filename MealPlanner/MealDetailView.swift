@@ -12,6 +12,11 @@ struct MealDetailView: View {
 
     @State private var detail: MealDetail?
     @State private var isLoading = true
+    @State private var newIngredient: String = ""
+    @State private var newInstruction: String = ""
+    @State private var ingredients: [String] = []
+    @State private var instructions: [String] = []
+    @State private var mealPlans: [MealPlan] = [] // New state for meal plans
     @EnvironmentObject private var favorites: FavoritesStore
 
     var body: some View {
@@ -26,10 +31,12 @@ struct MealDetailView: View {
                     }
 
                     Text("Instructions").font(.headline)
-                    Text(d.strInstructions ?? "—")
+                    ForEach(instructions, id: \.self) { instruction in
+                        Text("• \(instruction)")
+                    }
 
-                    Text("Ingredients").font(.headline).padding(.top, 8)
-                    ForEach(d.ingredientsList(), id: \.self) { item in
+                    Text("Ingredients").font(.headline).padding(.top)
+                    ForEach(ingredients, id: \.self) { item in
                         Text("• \(item)")
                     }
                 } else if isLoading {
@@ -37,6 +44,41 @@ struct MealDetailView: View {
                 } else {
                     Text("No details found.")
                 }
+
+                VStack(alignment: .leading) {
+                    TextField("Add new ingredient", text: $newIngredient)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .padding(.top)
+
+                    Button("Add Ingredient") {
+                        if !newIngredient.isEmpty {
+                            ingredients.append(newIngredient)
+                            newIngredient = ""
+                        }
+                    }
+                    .buttonStyle(.bordered)
+
+                    TextField("Add new instruction", text: $newInstruction)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .padding(.top)
+
+                    Button("Add Instruction") {
+                        if !newInstruction.isEmpty {
+                            instructions.append(newInstruction)
+                            newInstruction = ""
+                        }
+                    }
+                    .buttonStyle(.bordered)
+
+                    Button("Save Meal Plan") { // New button to save meal plan
+                        let mealPlan = MealPlan(id: UUID().uuidString, title: title, ingredients: ingredients, instructions: instructions)
+                        mealPlans.append(mealPlan)
+                        // Logic to save meal plan to user profile can be added here
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .padding(.top)
+                }
+                .padding(.top)
             }
             .padding()
         }
@@ -74,8 +116,13 @@ extension MealDetailView {
             }
         } catch {
             print("Favorite toggle error:", error)
-            // You could add user-facing error alerts here
         }
     }
 }
 
+struct MealPlan { // New struct for MealPlan
+    let id: String
+    let title: String
+    let ingredients: [String]
+    let instructions: [String]
+}
