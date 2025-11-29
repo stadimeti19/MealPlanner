@@ -16,6 +16,7 @@ struct AuthView: View {
     @State private var showAlert = false
     @State private var mealPlan = ""
     @State private var savedMealPlans: [String] = []
+    @State private var performanceMetrics: [String: Any] = [:]
     
     var body: some View {
         NavigationView {
@@ -131,6 +132,7 @@ struct AuthView: View {
         }
         .onAppear {
             fetchMealPlans()
+            startPerformanceTesting()
         }
     }
     
@@ -139,6 +141,7 @@ struct AuthView: View {
         errorMessage = ""
         
         do {
+            let startTime = Date()
             if isSignUp {
                 try await Auth.auth().createUser(withEmail: email, password: password)
                 print("Successfully created user account")
@@ -146,6 +149,8 @@ struct AuthView: View {
                 try await Auth.auth().signIn(withEmail: email, password: password)
                 print("Successfully signed in user")
             }
+            let endTime = Date()
+            performanceMetrics["authDuration"] = endTime.timeIntervalSince(startTime)
         } catch {
             errorMessage = error.localizedDescription
             showAlert = true
@@ -193,6 +198,11 @@ struct AuthView: View {
                 savedMealPlans = querySnapshot?.documents.compactMap { $0.data()["mealPlan"] as? String } ?? []
             }
         }
+    }
+    
+    private func startPerformanceTesting() {
+        // Placeholder for performance testing logic
+        print("Performance testing started.")
     }
 }
 
