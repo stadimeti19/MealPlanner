@@ -13,6 +13,7 @@ struct AuthView: View {
     @State private var isLoading = false
     @State private var errorMessage = ""
     @State private var showAlert = false
+    @State private var mealPlan = ""
     
     var body: some View {
         NavigationView {
@@ -81,6 +82,30 @@ struct AuthView: View {
                 .padding(.horizontal, 32)
                 
                 Spacer()
+                
+                // Meal Plan Input
+                VStack(spacing: 16) {
+                    Text("Create Your Meal Plan")
+                        .font(.title2)
+                        .fontWeight(.semibold)
+                    
+                    TextField("Enter Meal Plan", text: $mealPlan)
+                        .textFieldStyle(.roundedBorder)
+                        .padding(.horizontal, 32)
+                    
+                    Button(action: {
+                        saveMealPlan()
+                    }) {
+                        Text("Save Meal Plan")
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.green)
+                            .foregroundColor(.white)
+                            .cornerRadius(8)
+                    }
+                    .disabled(mealPlan.isEmpty)
+                }
+                .padding(.bottom, 40)
             }
             .navigationBarHidden(true)
         }
@@ -110,6 +135,12 @@ struct AuthView: View {
         }
         
         isLoading = false
+    }
+    
+    private func saveMealPlan() {
+        // Logic to save the meal plan can be implemented here
+        print("Meal Plan Saved: \(mealPlan)")
+        mealPlan = ""
     }
 }
 

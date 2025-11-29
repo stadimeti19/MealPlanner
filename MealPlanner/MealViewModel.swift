@@ -13,6 +13,10 @@ final class MealViewModel: ObservableObject {
     @Published var errorMessage: String?
     @Published var mealPlans: [MealPlan] = []
 
+    init() {
+        retrieveMealPlans()
+    }
+
     func search() async {
         let q = query.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !q.isEmpty else { return }
@@ -29,15 +33,15 @@ final class MealViewModel: ObservableObject {
     }
     
     func saveMealPlans() {
-        // Code to save mealPlans to persistent storage
-        // Example: UserDefaults.standard.set(try? PropertyListEncoder().encode(mealPlans), forKey: "mealPlans")
+        if let encoded = try? PropertyListEncoder().encode(mealPlans) {
+            UserDefaults.standard.set(encoded, forKey: "mealPlans")
+        }
     }
     
     func retrieveMealPlans() {
-        // Code to retrieve mealPlans from persistent storage
-        // Example: if let data = UserDefaults.standard.value(forKey: "mealPlans") as? Data {
-        //              mealPlans = (try? PropertyListDecoder().decode([MealPlan].self, from: data)) ?? []
-        //          }
+        if let data = UserDefaults.standard.value(forKey: "mealPlans") as? Data {
+            mealPlans = (try? PropertyListDecoder().decode([MealPlan].self, from: data)) ?? []
+        }
     }
 }
 

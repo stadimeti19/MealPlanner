@@ -14,6 +14,8 @@ struct MealDetailView: View {
     @State private var isLoading = true
     @State private var newIngredient: String = ""
     @State private var newInstruction: String = ""
+    @State private var ingredients: [String] = []
+    @State private var instructions: [String] = []
     @EnvironmentObject private var favorites: FavoritesStore
 
     var body: some View {
@@ -28,10 +30,12 @@ struct MealDetailView: View {
                     }
 
                     Text("Instructions").font(.headline)
-                    Text(d.strInstructions ?? "—")
+                    ForEach(instructions, id: \.self) { instruction in
+                        Text("• \(instruction)")
+                    }
 
-                    Text("Ingredients").font(.headline).padding(.top, 8)
-                    ForEach(d.ingredientsList(), id: \.self) { item in
+                    Text("Ingredients").font(.headline).padding(.top)
+                    ForEach(ingredients, id: \.self) { item in
                         Text("• \(item)")
                     }
                 } else if isLoading {
@@ -46,11 +50,8 @@ struct MealDetailView: View {
                         .padding(.top)
 
                     Button("Add Ingredient") {
-                        // Logic to add ingredient
                         if !newIngredient.isEmpty {
-                            // Add ingredient to the meal detail
-                            // This is a placeholder for actual implementation
-                            print("Adding ingredient: \(newIngredient)")
+                            ingredients.append(newIngredient)
                             newIngredient = ""
                         }
                     }
@@ -61,11 +62,8 @@ struct MealDetailView: View {
                         .padding(.top)
 
                     Button("Add Instruction") {
-                        // Logic to add instruction
                         if !newInstruction.isEmpty {
-                            // Add instruction to the meal detail
-                            // This is a placeholder for actual implementation
-                            print("Adding instruction: \(newInstruction)")
+                            instructions.append(newInstruction)
                             newInstruction = ""
                         }
                     }
@@ -109,7 +107,6 @@ extension MealDetailView {
             }
         } catch {
             print("Favorite toggle error:", error)
-            // You could add user-facing error alerts here
         }
     }
 }
