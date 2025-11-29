@@ -15,6 +15,7 @@ struct AuthView: View {
     @State private var errorMessage = ""
     @State private var showAlert = false
     @State private var mealPlan = ""
+    @State private var savedMealPlans: [String] = []
     
     var body: some View {
         NavigationView {
@@ -107,6 +108,19 @@ struct AuthView: View {
                     .disabled(mealPlan.isEmpty)
                 }
                 .padding(.bottom, 40)
+                
+                // Display Saved Meal Plans
+                VStack(spacing: 16) {
+                    Text("Saved Meal Plans")
+                        .font(.title2)
+                        .fontWeight(.semibold)
+                    
+                    List(savedMealPlans, id: \.self) { plan in
+                        Text(plan)
+                    }
+                    .frame(height: 200)
+                }
+                .padding(.horizontal, 32)
             }
             .navigationBarHidden(true)
         }
@@ -114,6 +128,9 @@ struct AuthView: View {
             Button("OK") { }
         } message: {
             Text(errorMessage)
+        }
+        .onAppear {
+            fetchMealPlans()
         }
     }
     
@@ -157,6 +174,23 @@ struct AuthView: View {
             } else {
                 print("Meal Plan Saved: \(mealPlan)")
                 mealPlan = ""
+                fetchMealPlans()
+            }
+        }
+    }
+    
+    private func fetchMealPlans() {
+        guard let user = Auth.auth().currentUser else {
+            print("No user is signed in.")
+            return
+        }
+        
+        let db = Firestore.firestore()
+        db.collection("mealPlans").whereField("userId", isEqualTo: user.uid).getDocuments { (querySnapshot, error) in
+            if let error = error {
+                print("Error fetching meal plans: \(error)")
+            } else {
+                savedMealPlans = querySnapshot?.documents.compactMap { $0.data()["mealPlan"] as? String } ?? []
             }
         }
     }
