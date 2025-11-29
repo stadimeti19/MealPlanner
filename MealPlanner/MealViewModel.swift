@@ -11,6 +11,7 @@ final class MealViewModel: ObservableObject {
     @Published var results: [MealBrief] = []
     @Published var isLoading = false
     @Published var errorMessage: String?
+    @Published var mealPlans: [MealPlan] = []
 
     func search() async {
         let q = query.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -20,4 +21,23 @@ final class MealViewModel: ObservableObject {
         do { results = try await MealAPI.search(byIngredient: q) }
         catch { errorMessage = error.localizedDescription }
     }
+    
+    func createMealPlan(name: String, meals: [MealBrief]) {
+        let newMealPlan = MealPlan(name: name, meals: meals)
+        mealPlans.append(newMealPlan)
+        saveMealPlans()
+    }
+    
+    func saveMealPlans() {
+        // Code to save mealPlans to persistent storage
+    }
+    
+    func retrieveMealPlans() {
+        // Code to retrieve mealPlans from persistent storage
+    }
+}
+
+struct MealPlan {
+    let name: String
+    let meals: [MealBrief]
 }
