@@ -16,6 +16,7 @@ struct MealDetailView: View {
     @State private var newInstruction: String = ""
     @State private var ingredients: [String] = []
     @State private var instructions: [String] = []
+    @State private var mealPlans: [MealPlan] = [] // New state for meal plans
     @EnvironmentObject private var favorites: FavoritesStore
 
     var body: some View {
@@ -68,6 +69,14 @@ struct MealDetailView: View {
                         }
                     }
                     .buttonStyle(.bordered)
+
+                    Button("Save Meal Plan") { // New button to save meal plan
+                        let mealPlan = MealPlan(id: UUID().uuidString, title: title, ingredients: ingredients, instructions: instructions)
+                        mealPlans.append(mealPlan)
+                        // Logic to save meal plan to user profile can be added here
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .padding(.top)
                 }
                 .padding(.top)
             }
@@ -109,4 +118,11 @@ extension MealDetailView {
             print("Favorite toggle error:", error)
         }
     }
+}
+
+struct MealPlan { // New struct for MealPlan
+    let id: String
+    let title: String
+    let ingredients: [String]
+    let instructions: [String]
 }

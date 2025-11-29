@@ -5,6 +5,7 @@
 
 import SwiftUI
 import FirebaseAuth
+import FirebaseFirestore
 
 struct AuthView: View {
     @State private var email = ""
@@ -138,9 +139,26 @@ struct AuthView: View {
     }
     
     private func saveMealPlan() {
-        // Logic to save the meal plan can be implemented here
-        print("Meal Plan Saved: \(mealPlan)")
-        mealPlan = ""
+        guard let user = Auth.auth().currentUser else {
+            print("No user is signed in.")
+            return
+        }
+        
+        let db = Firestore.firestore()
+        let mealPlanData: [String: Any] = [
+            "mealPlan": mealPlan,
+            "userId": user.uid,
+            "timestamp": Timestamp(date: Date())
+        ]
+        
+        db.collection("mealPlans").addDocument(data: mealPlanData) { error in
+            if let error = error {
+                print("Error saving meal plan: \(error)")
+            } else {
+                print("Meal Plan Saved: \(mealPlan)")
+                mealPlan = ""
+            }
+        }
     }
 }
 
