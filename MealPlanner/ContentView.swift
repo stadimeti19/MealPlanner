@@ -41,6 +41,18 @@ struct ContentView: View {
                         .foregroundColor(.red)
                     }
                 }
+                
+                Button(action: {
+                    // Navigation logic to home
+                }) {
+                    Text("Home")
+                        .font(.headline)
+                        .padding()
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
+                }
+                .padding()
             }
             .tabItem { Label("Search", systemImage: "magnifyingglass") }
 
