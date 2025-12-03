@@ -27,3 +27,30 @@ struct MealPlannerApp: App {
         }
     }
 }
+
+struct ContentView: View {
+    @EnvironmentObject var favoritesStore: FavoritesStore
+    @EnvironmentObject var authManager: AuthManager
+    
+    var body: some View {
+        NavigationView {
+            VStack {
+                // Main content goes here
+                
+                Spacer()
+                
+                Button(action: {
+                    // Navigation logic for home button
+                }) {
+                    Text("Home")
+                        .padding()
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
+                }
+                .padding(.bottom, 20)
+            }
+            .navigationTitle("Meal Planner")
+        }
+    }
+}
