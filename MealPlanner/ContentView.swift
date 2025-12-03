@@ -47,6 +47,23 @@ struct ContentView: View {
             SavedView()
                 .tabItem { Label("Saved", systemImage: "heart") }
         }
+        .overlay(
+            Button(action: {
+                // Navigation logic to home
+                if let rootView = UIApplication.shared.windows.first?.rootViewController as? UIHostingController<ContentView> {
+                    rootView.rootView = ContentView()
+                }
+            }) {
+                Text("Home")
+                    .font(.headline)
+                    .padding()
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(8)
+            }
+            .padding()
+            , alignment: .bottomTrailing
+        )
     }
 }
 

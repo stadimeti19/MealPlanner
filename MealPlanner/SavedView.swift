@@ -16,6 +16,11 @@ struct SavedView: View {
                 }
             }
             .navigationTitle("Saved Meals")
+            .navigationBarItems(leading: NavigationLink(destination: ContentView()) {
+                Text("Home")
+            }, trailing: HStack {
+                EditButton()
+            })
         }
     }
 }
@@ -24,5 +29,3 @@ struct SavedView: View {
     SavedView()
         .environmentObject(FavoritesStore())
 }
-
-
