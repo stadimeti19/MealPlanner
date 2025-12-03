@@ -41,6 +41,12 @@ struct ContentView: View {
                         .foregroundColor(.red)
                     }
                 }
+                .navigationBarItems(leading: Button(action: {
+                    // Action for home button
+                }) {
+                    Image(systemName: "house")
+                        .font(.title)
+                })
             }
             .tabItem { Label("Search", systemImage: "magnifyingglass") }
 
