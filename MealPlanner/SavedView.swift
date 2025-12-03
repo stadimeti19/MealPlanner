@@ -18,7 +18,7 @@ struct SavedView: View {
             .navigationTitle("Saved Meals")
             .navigationBarItems(leading: NavigationLink(destination: HomeView()) {
                 Text("Home")
-            })
+            }, trailing: EditButton())
         }
     }
 }

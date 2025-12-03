@@ -60,6 +60,7 @@ struct MealDetailView: View {
                     Text("Home")
                 }
                 .buttonStyle(.bordered)
+                .padding(.trailing, 8)
             }
         }
         .task {

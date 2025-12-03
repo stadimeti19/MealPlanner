@@ -43,7 +43,6 @@ struct ContentView: View {
                     ToolbarItem(placement: .navigationBarLeading) {
                         Button(action: {
                             // Navigate to the main screen
-                            // Assuming this is the main screen, no action needed
                         }) {
                             Image(systemName: "house")
                         }
