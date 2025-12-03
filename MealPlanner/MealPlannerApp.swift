@@ -59,6 +59,9 @@ struct ContentView: View {
             }) {
                 Text("Back")
             })
+            .onAppear {
+                selection = nil
+            }
         }
     }
 }
