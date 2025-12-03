@@ -13,6 +13,7 @@ struct MealDetailView: View {
     @State private var detail: MealDetail?
     @State private var isLoading = true
     @EnvironmentObject private var favorites: FavoritesStore
+    @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
         ScrollView {
@@ -51,6 +52,16 @@ struct MealDetailView: View {
                 }
                 .buttonStyle(.borderedProminent)
             }
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    presentationMode.wrappedValue.dismiss()
+                }) {
+                    Image(systemName: "house")
+                    Text("Home")
+                }
+                .buttonStyle(.bordered)
+                .padding(.trailing, 8)
+            }
         }
         .task {
             do { detail = try await MealAPI.lookup(id: mealId) }
@@ -78,4 +89,3 @@ extension MealDetailView {
         }
     }
 }
-

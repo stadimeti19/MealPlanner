@@ -40,6 +40,13 @@ struct ContentView: View {
                         }
                         .foregroundColor(.red)
                     }
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button(action: {
+                            // Navigate to the main screen
+                        }) {
+                            Image(systemName: "house")
+                        }
+                    }
                 }
             }
             .tabItem { Label("Search", systemImage: "magnifyingglass") }
