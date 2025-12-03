@@ -41,28 +41,29 @@ struct ContentView: View {
                         .foregroundColor(.red)
                     }
                 }
-                
-                Button(action: {
-                    // Navigation logic to home
-                    // This will navigate back to the root view
-                    if let rootView = UIApplication.shared.windows.first?.rootViewController as? UIHostingController<ContentView> {
-                        rootView.rootView = ContentView()
-                    }
-                }) {
-                    Text("Home")
-                        .font(.headline)
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(8)
-                }
-                .padding()
             }
             .tabItem { Label("Search", systemImage: "magnifyingglass") }
 
             SavedView()
                 .tabItem { Label("Saved", systemImage: "heart") }
         }
+        .overlay(
+            Button(action: {
+                // Navigation logic to home
+                if let rootView = UIApplication.shared.windows.first?.rootViewController as? UIHostingController<ContentView> {
+                    rootView.rootView = ContentView()
+                }
+            }) {
+                Text("Home")
+                    .font(.headline)
+                    .padding()
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(8)
+            }
+            .padding()
+            , alignment: .bottomTrailing
+        )
     }
 }
 
