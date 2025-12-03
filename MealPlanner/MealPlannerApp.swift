@@ -31,6 +31,7 @@ struct MealPlannerApp: App {
 struct ContentView: View {
     @EnvironmentObject var favoritesStore: FavoritesStore
     @EnvironmentObject var authManager: AuthManager
+    @State private var selection: Int? = nil
     
     var body: some View {
         NavigationView {
@@ -39,14 +40,16 @@ struct ContentView: View {
                 
                 Spacer()
                 
-                Button(action: {
-                    // Navigation logic for home button
-                }) {
-                    Text("Home")
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(8)
+                NavigationLink(destination: ContentView(), tag: 1, selection: $selection) {
+                    Button(action: {
+                        selection = 1
+                    }) {
+                        Text("Home")
+                            .padding()
+                            .background(Color.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(8)
+                    }
                 }
                 .padding(.bottom, 20)
             }
