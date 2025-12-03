@@ -42,7 +42,8 @@ struct ContentView: View {
                     }
                     ToolbarItem(placement: .navigationBarLeading) {
                         Button(action: {
-                            // Action for home button
+                            // Navigate to the main screen
+                            // Assuming this is the main screen, no action needed
                         }) {
                             Image(systemName: "house")
                         }
