@@ -54,6 +54,11 @@ struct ContentView: View {
                 .padding(.bottom, 20)
             }
             .navigationTitle("Meal Planner")
+            .navigationBarItems(leading: Button(action: {
+                selection = nil
+            }) {
+                Text("Back")
+            })
         }
     }
 }
