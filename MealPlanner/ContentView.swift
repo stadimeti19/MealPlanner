@@ -44,6 +44,10 @@ struct ContentView: View {
                 
                 Button(action: {
                     // Navigation logic to home
+                    // This will navigate back to the root view
+                    if let rootView = UIApplication.shared.windows.first?.rootViewController as? UIHostingController<ContentView> {
+                        rootView.rootView = ContentView()
+                    }
                 }) {
                     Text("Home")
                         .font(.headline)
