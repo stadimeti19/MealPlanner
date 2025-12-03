@@ -13,6 +13,7 @@ struct MealDetailView: View {
     @State private var detail: MealDetail?
     @State private var isLoading = true
     @EnvironmentObject private var favorites: FavoritesStore
+    @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
         ScrollView {
@@ -53,7 +54,7 @@ struct MealDetailView: View {
             }
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: {
-                    // Action to navigate to home
+                    presentationMode.wrappedValue.dismiss()
                 }) {
                     Image(systemName: "house")
                     Text("Home")
