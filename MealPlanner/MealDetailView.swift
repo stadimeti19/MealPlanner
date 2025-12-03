@@ -51,6 +51,15 @@ struct MealDetailView: View {
                 }
                 .buttonStyle(.borderedProminent)
             }
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    // Action to go back to home
+                }) {
+                    Image(systemName: "house")
+                    Text("Home")
+                }
+                .buttonStyle(.bordered)
+            }
         }
         .task {
             do { detail = try await MealAPI.lookup(id: mealId) }
@@ -78,4 +87,3 @@ extension MealDetailView {
         }
     }
 }
-
